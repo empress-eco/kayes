@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include navari_kayes *.css
+recursive-include navari_kayes *.csv
+recursive-include navari_kayes *.html
+recursive-include navari_kayes *.ico
+recursive-include navari_kayes *.js
+recursive-include navari_kayes *.json
+recursive-include navari_kayes *.md
+recursive-include navari_kayes *.png
+recursive-include navari_kayes *.py
+recursive-include navari_kayes *.svg
+recursive-include navari_kayes *.txt
+recursive-exclude navari_kayes *.pyc
