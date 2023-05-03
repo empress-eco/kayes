@@ -1,7 +1,7 @@
 {
  "add_total_row": 0,
  "columns": [],
- "creation": "2023-05-02 13:40:07.831618",
+ "creation": "2023-05-03 13:09:42.434891",
  "disable_prepared_report": 0,
  "disabled": 0,
  "docstatus": 0,
@@ -10,14 +10,14 @@
  "idx": 0,
  "is_standard": "Yes",
  "letter_head": "Default",
- "modified": "2023-05-02 13:40:07.831618",
+ "modified": "2023-05-03 13:09:42.434891",
  "modified_by": "Administrator",
  "module": "Navari Kayes",
- "name": "Indirect Expense",
+ "name": "Expense Report",
  "owner": "Administrator",
  "prepared_report": 0,
  "ref_doctype": "GL Entry",
- "report_name": "Indirect Expense",
+ "report_name": "Expense Report",
  "report_type": "Script Report",
  "roles": [
   {

@@ -2,7 +2,7 @@
 // For license information, please see license.txt
 /* eslint-disable */
 
-frappe.query_reports["Indirect Expense"] = {
+frappe.query_reports["Expense Report"] = {
 	"filters": [
 		{
 			"fieldname":"company",
@@ -30,32 +30,10 @@ frappe.query_reports["Indirect Expense"] = {
 			"width": "100px"
 		},
 		{
-			"fieldname":"id",
-			"label": __("Id"),
-			"fieldtype": "Link",
-			"options": "GL Entry",
-			"reqd": 0,
-			"width": "100px"
-		},
-		{
 			"fieldname":"account",
 			"label": __("Account"),
 			"fieldtype": "Link",
 			"options": "Account",
-			"reqd": 0,
-			"width": "100px"
-		},
-		{
-			"fieldname":"party",
-			"label": __("Party"),
-			"fieldtype": "Data",
-			"reqd": 0,
-			"width": "100px"
-		},
-		{
-			"fieldname":"voucher_no",
-			"label": __("Voucher No"),
-			"fieldtype": "Data",
 			"reqd": 0,
 			"width": "100px"
 		}
