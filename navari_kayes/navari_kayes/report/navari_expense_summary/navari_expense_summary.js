@@ -2,7 +2,7 @@
 // For license information, please see license.txt
 /* eslint-disable */
 
-frappe.query_reports["Expense Report"] = {
+frappe.query_reports["Navari Expense Summary"] = {
 	"filters": [
 		{
 			"fieldname":"company",
@@ -34,6 +34,14 @@ frappe.query_reports["Expense Report"] = {
 			"label": __("Account"),
 			"fieldtype": "Link",
 			"options": "Account",
+			"reqd": 0,
+			"width": "100px"
+		},
+		{
+			"fieldname":"cost_center",
+			"label": __("Cost Center"),
+			"fieldtype": "Link",
+			"options": "Cost Center",
 			"reqd": 0,
 			"width": "100px"
 		}
