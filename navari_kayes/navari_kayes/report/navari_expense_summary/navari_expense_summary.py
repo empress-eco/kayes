@@ -98,19 +98,20 @@ def get_data(filters):
 				data.append(gl_entry);
 
 				# fill credit, debit and balance for all parent accounts on the tree.
-				child_row = gl_entry;
-				parent_account = child_row['parent'];
+				if indent > 0:
+					child_row = gl_entry;
+					parent_account = child_row['parent'];
 
-				while parent_account:
-					totals_row = list(filter(lambda x: x['account'] == parent_account, data));
+					while parent_account:
+						totals_row = list(filter(lambda x: x['account'] == parent_account, data));
 
-					if totals_row:
-						totals_row = totals_row[0];
-						totals_row['debit']	+= child_row['debit'];
-						totals_row['credit'] += child_row['credit'];
-						totals_row['balance'] += child_row['balance'];
+						if totals_row:
+							totals_row = totals_row[0];
+							totals_row['debit']	+= child_row['debit'];
+							totals_row['credit'] += child_row['credit'];
+							totals_row['balance'] += child_row['balance'];
 
-						parent_account = totals_row['parent'];
+							parent_account = totals_row['parent'];
 
 	for account in pending_accounts:
 		parent_account = frappe.db.get_value('Account', account, 'parent_account');
