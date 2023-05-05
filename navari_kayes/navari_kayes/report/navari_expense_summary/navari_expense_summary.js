@@ -44,6 +44,13 @@ frappe.query_reports["Navari Expense Summary"] = {
 			"options": "Cost Center",
 			"reqd": 0,
 			"width": "100px"
+		},
+		{
+			"fieldname":"show_zero_values",
+			"label": __("Show Zero Values"),
+			"fieldtype": "Check",
+			"default": 0,
+			"reqd": 0
 		}
 	]
 };

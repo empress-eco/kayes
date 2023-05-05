@@ -47,7 +47,7 @@ def get_columns():
 
 def get_data(filters):
 	data = []
-	company, from_date, to_date, account, cost_center = filters.get('company'), filters.get('from_date'), filters.get('to_date'), filters.get('account'), filters.get('cost_center');
+	company, from_date, to_date, account, cost_center, show_zero_values = filters.get('company'), filters.get('from_date'), filters.get('to_date'), filters.get('account'), filters.get('cost_center'), filters.get('show_zero_values');
 
 	def is_group(account):
 		return frappe.db.get_value('Account', account, 'is_group');
@@ -79,8 +79,8 @@ def get_data(filters):
 			data.append({ 'account': account, 'indent': indent, 'parent': parent, 'debit': 0, 'credit': 0, 'balance': 0 });
 		else:	
 			gl_entry = frappe.db.sql(f"""
-				SELECT  SUM(gle.credit_in_account_currency) as "credit",
-						gle.account as "account",
+				SELECT	IFNULL(gle.account, '{account}') as "account",
+						SUM(gle.credit_in_account_currency) as "credit",
 						SUM(gle.debit_in_account_currency) as "debit",
 						SUM(gle.debit_in_account_currency - gle.credit_in_account_currency) as "balance",
 						gle.cost_center as "cost_center",
@@ -119,10 +119,12 @@ def get_data(filters):
 		parent_row = list(filter(lambda x: x['account'] == parent_account, data));
 
 		indent = (parent_row[0]['indent']) + 1 if parent_row else 0;
-
+		
 		append_accounts(account, indent, conditions, from_date, to_date);
 
-	data = list(filter(lambda x: x['account'], data));
+	if not show_zero_values:
+		data = list(filter(lambda x: x['balance'], data));
+	
 	return data;
 
 	
