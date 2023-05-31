@@ -2,7 +2,7 @@
 // For license information, please see license.txt
 /* eslint-disable */
 
-frappe.query_reports["Shipment Follow Up Script Report"] = {
+frappe.query_reports["Shipment Follow Up"] = {
 	"filters": [
 		{
 			"fieldname":"company",
@@ -25,9 +25,9 @@ frappe.query_reports["Shipment Follow Up Script Report"] = {
 			"fieldname":"expexted_date",
 			"label": __("Expexted Date"),
 			"fieldtype": "Date",
-			"default": dateutil.year_start(),
 			"reqd": 1,
 			"width": "80px",
+			"default": "__python__:from dateutil import relativedelta; from datetime import datetime; current_date + relativedelta(day=31).strftime('%Y-%m-%d')"
 		},
 		{
 			"fieldname":"customer",
@@ -45,7 +45,6 @@ frappe.query_reports["Shipment Follow Up Script Report"] = {
 			"reqd": 0,
 			"width": "100px",
 		}
-		
-		
+
 	]
 };
