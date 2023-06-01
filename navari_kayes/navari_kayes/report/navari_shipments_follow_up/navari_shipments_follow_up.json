@@ -1,0 +1,33 @@
+{
+ "add_total_row": 0,
+ "columns": [],
+ "creation": "2023-05-31 23:19:59.000967",
+ "disable_prepared_report": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "letter_head": "Default",
+ "modified": "2023-05-31 23:19:59.000967",
+ "modified_by": "Administrator",
+ "module": "Navari Kayes",
+ "name": "Navari Shipments Follow Up",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Purchase Order",
+ "report_name": "Navari Shipments Follow Up",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "Stock User"
+  },
+  {
+   "role": "Purchase Manager"
+  },
+  {
+   "role": "Purchase User"
+  }
+ ]
+}
