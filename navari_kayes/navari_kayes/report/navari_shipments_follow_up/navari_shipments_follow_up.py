@@ -58,8 +58,8 @@ def get_columns():
 			'width': 200
 		},
 		{
-			'fieldname': 'customer_delivery_destination',
-			'label': _('Customer Delivery Destination'),
+			'fieldname': 'customer_name',
+			'label': _('Customer Name'),
 			'fieldtype': 'Link',
 			'options': 'Customer',
 			'width': 240
@@ -115,7 +115,6 @@ def get_data(filters):
 
 	shipment_details = frappe.db.sql(f"""
 		SELECT po.name as purchase_order,
-			po.customer as customer_delivery_destination,
 			po.supplier as supplier,
 			po.named_place as shipping_terms_and_method,
 			poi.cost_center as cost_center,
@@ -137,6 +136,8 @@ def get_data(filters):
 				row['expected_shipping_date'] = frappe.db.get_value('Sales Order Item', row.get('sales_order_item'), 'delivery_date');
 			if row.get('sales_order'):
 				row['customer_delivery_deadline'] = frappe.db.get_value('Sales Order', row.get('sales_order'), 'delivery_date');
+				row['comments'] = frappe.db.get_value('Sales Order', row.get('sales_order'), 'comments');
+				row['customer_name'] = frappe.db.get_value('Sales Order', row.get('sales_order'), 'customer');
 				if not row.get('shipping_terms_and_method'):
 					row['shipping_terms_and_method'] = frappe.db.get_value('Sales Order', row.get('sales_order'), 'named_place');
 		return shipment_details;
