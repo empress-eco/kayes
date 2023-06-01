@@ -116,13 +116,13 @@ def get_data(filters):
 	shipment_details = frappe.db.sql(f"""
 		SELECT po.name as purchase_order,
 			po.supplier as supplier,
-			po.named_place as shipping_terms_and_method,
+			po.incoterm as shipping_terms_and_method,
 			poi.cost_center as cost_center,
 			poi.description as description,
 			poi.schedule_date as expected_arrival_date,
 			poi.sales_order as sales_order,
 			poi.sales_order_item as sales_order_item,
-			so.shipping_address_name as delivery_place,
+			so.customer_address as delivery_place,
 			so.shipping_info as shipping_info
 		FROM `tabPurchase Order` as po
 		INNER JOIN `tabPurchase Order Item` as poi ON po.name = poi.parent
@@ -139,7 +139,7 @@ def get_data(filters):
 				row['comments'] = frappe.db.get_value('Sales Order', row.get('sales_order'), 'comments');
 				row['customer_name'] = frappe.db.get_value('Sales Order', row.get('sales_order'), 'customer');
 				if not row.get('shipping_terms_and_method'):
-					row['shipping_terms_and_method'] = frappe.db.get_value('Sales Order', row.get('sales_order'), 'named_place');
+					row['shipping_terms_and_method'] = frappe.db.get_value('Sales Order', row.get('sales_order'), 'incoterm');
 		return shipment_details;
 	else:
 		return [];
