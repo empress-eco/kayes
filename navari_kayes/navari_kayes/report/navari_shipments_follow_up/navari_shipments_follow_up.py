@@ -119,7 +119,8 @@ def get_data(filters):
 			po.incoterm as shipping_terms_and_method,
 			poi.cost_center as cost_center,
 			poi.description as description,
-			poi.schedule_date as expected_arrival_date,
+			poi.schedule_date as expected_shipping_date,
+			poi.expected_delivery_date as expected_arrival_date,
 			poi.sales_order as sales_order,
 			poi.sales_order_item as sales_order_item,
 			so.customer_address as delivery_place,
@@ -132,8 +133,6 @@ def get_data(filters):
 
 	if shipment_details:
 		for row in shipment_details:
-			if row.get('sales_order_item'):
-				row['expected_shipping_date'] = frappe.db.get_value('Sales Order Item', row.get('sales_order_item'), 'delivery_date');
 			if row.get('sales_order'):
 				row['customer_delivery_deadline'] = frappe.db.get_value('Sales Order', row.get('sales_order'), 'delivery_date');
 				row['comments'] = frappe.db.get_value('Sales Order', row.get('sales_order'), 'comments');
