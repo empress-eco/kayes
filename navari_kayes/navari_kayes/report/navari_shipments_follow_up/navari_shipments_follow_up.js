@@ -30,13 +30,6 @@ frappe.query_reports["Navari Shipments Follow Up"] = {
 			"width": "100px"
 		},
 		{
-			"fieldname":"expected_date",
-			"label": __("Expected Date"),
-			"fieldtype": "Date",
-			"reqd": 0,
-			"width": "100px"
-		},
-		{
 			"fieldname":"purchase_order",
 			"label": __("Purchase Order"),
 			"fieldtype": "Link",
