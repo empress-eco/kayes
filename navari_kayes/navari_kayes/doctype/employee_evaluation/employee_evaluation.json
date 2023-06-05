@@ -1,0 +1,142 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-06-05 23:49:33.551778",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "employee_no",
+  "department",
+  "reviewer",
+  "column_break_tsjxj",
+  "employee_name",
+  "period_of_review",
+  "reviewers_title",
+  "section_break_cetpp",
+  "evaluation_template",
+  "key_evaluation_areas",
+  "section_break_73zvb",
+  "opportunities_for_development",
+  "section_break_lsi1s",
+  "reviewers_comments",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fetch_from": "employee_no.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Small Text",
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department"
+  },
+  {
+   "fieldname": "reviewer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Reviewer",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_tsjxj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "employee_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Employee No",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fieldname": "period_of_review",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Period of Review",
+   "options": "Appraisal Cycle",
+   "reqd": 1
+  },
+  {
+   "fieldname": "reviewers_title",
+   "fieldtype": "Data",
+   "label": "Reviewers Title"
+  },
+  {
+   "fieldname": "section_break_cetpp",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "opportunities_for_development",
+   "fieldtype": "Small Text",
+   "label": "Opportunities for Development"
+  },
+  {
+   "fieldname": "section_break_lsi1s",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "reviewers_comments",
+   "fieldtype": "Small Text",
+   "label": "Reviewers Comments"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Employee Evaluation",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "key_evaluation_areas",
+   "fieldtype": "Table",
+   "label": "Key Evaluation Areas",
+   "options": "Key Evaluation Areas"
+  },
+  {
+   "fieldname": "section_break_73zvb",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "evaluation_template",
+   "fieldtype": "Link",
+   "label": "Evaluation Template",
+   "options": "Appraisal Template"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2023-06-06 00:43:57.807248",
+ "modified_by": "Administrator",
+ "module": "Navari Kayes",
+ "name": "Employee Evaluation",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
