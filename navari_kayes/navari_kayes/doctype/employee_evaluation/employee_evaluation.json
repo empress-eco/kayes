@@ -66,9 +66,11 @@
    "reqd": 1
   },
   {
+   "fetch_from": "reviewer.designation",
    "fieldname": "reviewers_title",
-   "fieldtype": "Data",
-   "label": "Reviewers Title"
+   "fieldtype": "Small Text",
+   "label": "Reviewers Title",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_cetpp",
@@ -117,7 +119,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-06-06 00:43:57.807248",
+ "modified": "2023-06-06 07:14:53.010490",
  "modified_by": "Administrator",
  "module": "Navari Kayes",
  "name": "Employee Evaluation",
