@@ -68,8 +68,9 @@ def get_data(filters):
 
 		return accounts_list;
 
-	root_account = '5000 - Expenses - KTE' if not from_account else from_account;
+	root_account = '' if not from_account else from_account;
 	pending_accounts = get_pending_accounts([root_account]);
+	print(pending_accounts)
 
 	conditions = " AND gle.docstatus = 1 ";
 
