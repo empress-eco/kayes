@@ -30,8 +30,16 @@ frappe.query_reports["Navari Expense Summary"] = {
 			"width": "100px"
 		},
 		{
-			"fieldname":"account",
-			"label": __("Account"),
+			"fieldname":"from_account",
+			"label": __("From Account"),
+			"fieldtype": "Link",
+			"options": "Account",
+			"reqd": 0,
+			"width": "100px"
+		},
+		{
+			"fieldname":"to_account",
+			"label": __("To Account"),
 			"fieldtype": "Link",
 			"options": "Account",
 			"reqd": 0,

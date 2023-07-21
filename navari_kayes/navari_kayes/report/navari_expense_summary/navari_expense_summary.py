@@ -47,7 +47,15 @@ def get_columns():
 
 def get_data(filters):
 	data = []
-	company, from_date, to_date, account, cost_center, show_zero_values = filters.get('company'), filters.get('from_date'), filters.get('to_date'), filters.get('account'), filters.get('cost_center'), filters.get('show_zero_values');
+	company = filters.get('company')
+	from_date = filters.get('from_date')
+	to_date = filters.get('to_date')
+	account = filters.get('account')
+	from_account = filters.get('from_account')
+	to_account = filters.get('to_account')
+	cost_center = filters.get('cost_center')
+	show_zero_values = filters.get('show_zero_values')
+
 
 	def is_group(account):
 		return frappe.db.get_value('Account', account, 'is_group');
@@ -70,14 +78,18 @@ def get_data(filters):
 		conditions += f" AND gle.company = '{company}'";
 	if cost_center:
 		conditions += f" AND gle.cost_center = '{cost_center}'";
+	if account:
+		conditions += f" AND gle.account = '{account}";
 
-	def append_accounts(account, indent, conditions, from_date, to_date):
-		conditions += f" AND gle.account LIKE '%{account}'";
 
+	def append_accounts(account, indent, conditions, from_date, to_date, from_account, to_account):
+		conditions += f" AND gle.account LIKE '%{account}'"
+		# print(conditions)
 		if is_group(account):
 			parent = None if indent == 0 else frappe.db.get_value('Account', account, 'parent_account');
+
 			data.append({ 'account': account, 'indent': indent, 'parent': parent, 'debit': 0, 'credit': 0, 'balance': 0 });
-		else:	
+		else:
 			gl_entry = frappe.db.sql(f"""
 				SELECT	IFNULL(gle.account, '{account}') as "account",
 						SUM(gle.credit_in_account_currency) as "credit",
@@ -88,7 +100,9 @@ def get_data(filters):
 				FROM `tabGL Entry` as gle
 				INNER JOIN `tabAccount` as ac
 				ON gle.account = ac.name
-				WHERE (gle.creation BETWEEN '{from_date}' AND '{to_date}') {conditions}
+				WHERE (gle.posting_date BETWEEN '{from_date}' AND '{to_date}') 
+				AND (gle.account BETWEEN '{from_account}' AND '{to_account}') 
+				   {conditions}
 				""", as_dict = True);
 
 			if gl_entry:
@@ -113,14 +127,16 @@ def get_data(filters):
 
 							parent_account = totals_row['parent'];
 
+						# print(parent_account)
+
 	for account in pending_accounts:
 		parent_account = frappe.db.get_value('Account', account, 'parent_account');
 
 		parent_row = list(filter(lambda x: x['account'] == parent_account, data));
 
 		indent = (parent_row[0]['indent']) + 1 if parent_row else 0;
-		
-		append_accounts(account, indent, conditions, from_date, to_date);
+
+		append_accounts(account, indent, conditions, from_date, to_date, from_account, to_account);
 
 	if not show_zero_values:
 		data = list(filter(lambda x: x['balance'], data));
