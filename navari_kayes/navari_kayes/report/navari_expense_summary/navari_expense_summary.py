@@ -50,7 +50,6 @@ def get_data(filters):
 	company = filters.get('company')
 	from_date = filters.get('from_date')
 	to_date = filters.get('to_date')
-	account = filters.get('account')
 	from_account = filters.get('from_account')
 	to_account = filters.get('to_account')
 	cost_center = filters.get('cost_center')
@@ -69,7 +68,7 @@ def get_data(filters):
 
 		return accounts_list;
 
-	root_account = '5000 - Expenses - KTE' if not account else account;
+	root_account = '5000 - Expenses - KTE' if not from_account else from_account;
 	pending_accounts = get_pending_accounts([root_account]);
 
 	conditions = " AND gle.docstatus = 1 ";
@@ -78,8 +77,6 @@ def get_data(filters):
 		conditions += f" AND gle.company = '{company}'";
 	if cost_center:
 		conditions += f" AND gle.cost_center = '{cost_center}'";
-	if account:
-		conditions += f" AND gle.account = '{account}";
 
 
 	def append_accounts(account, indent, conditions, from_date, to_date, from_account, to_account):
@@ -101,7 +98,7 @@ def get_data(filters):
 				INNER JOIN `tabAccount` as ac
 				ON gle.account = ac.name
 				WHERE (gle.posting_date BETWEEN '{from_date}' AND '{to_date}') 
-				AND (gle.account BETWEEN '{from_account}' AND '{to_account}') 
+				AND (ac.name BETWEEN '{from_account}' AND '{to_account}') 
 				   {conditions}
 				""", as_dict = True);
 
@@ -126,8 +123,6 @@ def get_data(filters):
 							totals_row['balance'] += child_row['balance'];
 
 							parent_account = totals_row['parent'];
-
-						# print(parent_account)
 
 	for account in pending_accounts:
 		parent_account = frappe.db.get_value('Account', account, 'parent_account');
