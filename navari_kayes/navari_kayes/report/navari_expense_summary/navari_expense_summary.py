@@ -55,7 +55,10 @@ def get_data(filters):
 	cost_center = filters.get('cost_center')
 	show_zero_values = filters.get('show_zero_values')
 
-
+	root_account = from_account if from_account else frappe.db.get_all('Account', filters = { 'root_type': 'Expense', 'parent_account': '' }, pluck = 'name')[0];
+	first_account_no = frappe.db.get_value('Account', root_account, 'account_number');
+	last_account_no = frappe.db.get_value('Account', to_account, 'account_number') if to_account else None;
+		
 	def is_group(account):
 		return frappe.db.get_value('Account', account, 'is_group');
 
@@ -63,14 +66,23 @@ def get_data(filters):
 		for account in accounts_list:
 			if is_group(account):
 				insert_index = accounts_list.index(account) + 1;
-				child_accounts = frappe.db.get_all('Account', filters = { 'parent_account': account }, pluck = 'name');
+				child_accounts = None;
+				if last_account_no:
+					child_accounts = frappe.db.get_all('Account', 
+						filters = { 'root_type': 'Expense', 'parent_account': account, 'account_number': ['<=', last_account_no] }, 
+						or_filters = { 'root_type': 'Expense', 'parent_account': account, 'account_number': ['>=', first_account_no] },
+						pluck = 'name'
+					);
+				else:
+					child_accounts = frappe.db.get_all('Account', 
+						filters = { 'root_type': 'Expense', 'parent_account': account, 'account_number': ['>=', first_account_no] }, 
+						pluck = 'name'
+					);
 				accounts_list[ insert_index:insert_index ] = child_accounts;
 
 		return accounts_list;
 
-	root_account = '' if not from_account else from_account;
 	pending_accounts = get_pending_accounts([root_account]);
-	print(pending_accounts)
 
 	conditions = " AND gle.docstatus = 1 ";
 
@@ -79,10 +91,8 @@ def get_data(filters):
 	if cost_center:
 		conditions += f" AND gle.cost_center = '{cost_center}'";
 
-
 	def append_accounts(account, indent, conditions, from_date, to_date, from_account, to_account):
 		conditions += f" AND gle.account LIKE '%{account}'"
-		# print(conditions)
 		if is_group(account):
 			parent = None if indent == 0 else frappe.db.get_value('Account', account, 'parent_account');
 
@@ -98,9 +108,7 @@ def get_data(filters):
 				FROM `tabGL Entry` as gle
 				INNER JOIN `tabAccount` as ac
 				ON gle.account = ac.name
-				WHERE (gle.posting_date BETWEEN '{from_date}' AND '{to_date}') 
-				AND (ac.name BETWEEN '{from_account}' AND '{to_account}') 
-				   {conditions}
+				WHERE (gle.posting_date BETWEEN '{from_date}' AND '{to_date}')  {conditions}
 				""", as_dict = True);
 
 			if gl_entry:
