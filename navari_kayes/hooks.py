@@ -153,11 +153,13 @@ app_license = "MIT"
 # exempt linked doctypes from being automatically cancelled
 #
 # auto_cancel_exempted_doctypes = ["Auto Repeat"]
+auto_cancel_exempted_doctypes = ["Cost Distribution"]
 
 # Ignore links to specified DocTypes when deleting documents
 # -----------------------------------------------------------
 
 # ignore_links_on_delete = ["Communication", "ToDo"]
+ignore_links_on_delete = ["Cost Distribution"]
 
 # Request Events
 # ----------------
