@@ -102,13 +102,11 @@ app_license = "MIT"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-#	"*": {
-#		"on_update": "method",
-#		"on_cancel": "method",
-#		"on_trash": "method"
-#	}
-# }
+doc_events = {
+	"Journal Entry": {
+		"on_cancel": "navari_kayes.controllers.delete_linked_cost_distributions.custom_on_cancel"
+	}
+}
 
 # Scheduled Tasks
 # ---------------
