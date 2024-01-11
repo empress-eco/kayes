@@ -2,10 +2,8 @@
 # For license information, please see license.txt
 
 import frappe
-from frappe import _, scrub
-from pypika import Case
-from functools import reduce
-
+from frappe import _
+from pypika import Case, Criterion
 
 def execute(filters=None):
      columns = get_columns()
@@ -13,59 +11,57 @@ def execute(filters=None):
         
      return columns, data
 
-
-
 def get_columns():
     columns = [ 
-            {
-                "label": _("Start Date"),
-                "fieldname": "start_date",
-                "fieldtype": "Date",
-                "width": 100,
-            },
-            {
-                "label": _("End Date"),
-                "fieldname": "end_date",
-                "fieldtype": "Date",
-                "width": 100,
-            },
             {
                 "label": _("Description"),
                 "fieldname": "quotation_number",
                 "fieldtype": "Link",
                 "options": "Quotation",
-                "width": 120,
+                "width": 240,
+            },
+            {
+                "label": _("Start Date"),
+                "fieldname": "start_date",
+                "fieldtype": "Date",
+                "width": 150,
+            },
+            {
+                "label": _("Valid Till"),
+                "fieldname": "valid_till",
+                "fieldtype": "Date",
+                "width": 150,
             },
             {
                 "label": _("Customer Name"),
                 "fieldname": "customer_name",
                 "fieldtype": "Link",
                 "options": "Customer",
-                "width": 150,
+                "width": 240,
             },
             {
                 "label": _("Status"),
                 "fieldname": "status",
                 "fieldtype": "Data",
-                "width": 100,
+                "width": 180,
             },
             {
                 "label": _("VAT Status"),
                 "fieldname": "vat_status",
                 "fieldtype": "Data",
-                "width": 100,
+                "width": 180,
             },
             {
                 "label": _("Sales"),
                 "fieldname": "sales",
                 "fieldtype": "Currency",
-                "width": 120,
+                "width": 150,
             },
             {
                 "label": _("VAT"),
                 "fieldname": "vat",
                 "fieldtype": "Currency",
-                "width": 100,
+                "width": 150,
             },
             {
                 "label": _("Total"),
@@ -91,23 +87,29 @@ def get_columns():
 
 def get_quotation_data(filters):
     company = filters.get('company')
-    transaction_date = filters.get('start_date')
-    valid_till = filters.get('end_date')
+    start_date = filters.get('start_date')
+    end_date = filters.get('end_date')
+    valid_till = filters.get('valid_till')
     status = filters.get('status')
 	
     quotation = frappe.qb.DocType("Quotation")
     quotation_item = frappe.qb.DocType("Quotation Item")
     sales_taxes_charges = frappe.qb.DocType("Sales Taxes and Charges")
 
-    conditions = [quotation.docstatus == 1]
+    conditions = [quotation.docstatus < 2]
+    
     if company:
         conditions.append(quotation.company == company)
-    if transaction_date:
-        conditions.append(quotation.transaction_date == transaction_date)
+    if start_date and end_date:
+        conditions.append(quotation.transaction_date[start_date:end_date])
     if valid_till:
         conditions.append(quotation.valid_till == valid_till)
-    if status:
-        conditions.append(quotation.workflow_state == status)
+    if status == "Approved":
+        conditions.append(quotation.workflow_state == "Approved")
+    if status == "Pending Approval":
+        conditions.append(quotation.workflow_state != "Approved")
+        conditions.append(quotation.workflow_state != "Rejected")
+        conditions.append(quotation.workflow_state != "Cancelled")
 
 
     query = frappe.qb.from_(quotation) \
@@ -117,9 +119,10 @@ def get_quotation_data(filters):
         .on(sales_taxes_charges.parent == quotation.name) \
         .select(
             quotation.transaction_date.as_("start_date"),
-            quotation.valid_till.as_("end_date"),
+            quotation.valid_till.as_("valid_till"),
             quotation.name.as_("quotation_number"),
             quotation.customer_name,
+            quotation.workflow_state.as_("status"),
             Case()
             .when(quotation.workflow_state == 'Approved', 'Approved')
             .else_('Pending Approval')
@@ -131,25 +134,21 @@ def get_quotation_data(filters):
             quotation_item.valuation_rate.as_("cost"),
             quotation_item.gross_profit.as_("profit"),
             ((quotation_item.gross_profit / quotation.base_total) * 100).as_("margin")
-        ).where(reduce(lambda x, y: x & y, conditions))
+        ).where(Criterion.all(conditions))
 
     data = query.run(as_dict=True)
-
+    quotations = []
     report_data = []
+
     for row in data:
-        report_data.append({
-            "start_date": row["start_date"],
-            "end_date": row["end_date"],
-            "quotation_number": row["quotation_number"],
-            "customer_name": row["customer_name"],
-            "status": row["status"],
-            "vat_status": row["vat_status"],
-            "sales": row["sales"],
-            "vat": row["vat"],
-            "total": row["total"],
-            "cost": row["cost"],
-            "profit": row["profit"],
-            "margin": row["margin"]
-        })
+        row["indent"] = 1
+        if row["quotation_number"] in quotations:
+            report_data.append(row)
+        else:
+            quotations.append(row["quotation_number"])
+            report_data.append({ "quotation_number": row["quotation_number"], "indent": 0, "bold": 1 })
+            report_data.append(row)
+            
     return report_data
+
 
