@@ -21,6 +21,12 @@ def get_columns():
                 "width": 240,
             },
             {
+                "label": _("Item Name"),
+                "fieldname": "item_name",
+                "fieldtype": "Data",
+                "width": 240,
+            },
+            {
                 "label": _("Start Date"),
                 "fieldname": "start_date",
                 "fieldtype": "Date",
@@ -131,6 +137,7 @@ def get_quotation_data(filters):
             quotation.base_total.as_("sales"),
             sales_taxes_charges.base_tax_amount.as_("vat"),
             sales_taxes_charges.base_total.as_("total"),
+            quotation_item.item_name.as_("item_name"),
             quotation_item.valuation_rate.as_("cost"),
             quotation_item.gross_profit.as_("profit"),
             ((quotation_item.gross_profit / quotation.base_total) * 100).as_("margin")
@@ -143,10 +150,12 @@ def get_quotation_data(filters):
     for row in data:
         row["indent"] = 1
         if row["quotation_number"] in quotations:
+            row["quotation_number"] = ""
             report_data.append(row)
         else:
             quotations.append(row["quotation_number"])
             report_data.append({ "quotation_number": row["quotation_number"], "indent": 0, "bold": 1 })
+            row["quotation_number"] = ""
             report_data.append(row)
             
     return report_data
